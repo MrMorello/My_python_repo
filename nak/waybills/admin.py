@@ -2,8 +2,8 @@ from django.contrib import admin
 from . models import *
 
 
-class ProductImageInline(admin.TabularInline):
-    model = ProductImage
+class ProductTovarInline(admin.TabularInline):
+    model = Tovar
 
 
 class ProductAdmin (admin.ModelAdmin):
