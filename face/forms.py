@@ -1,7 +1,16 @@
-from django import forms
-from .models import *
+from django.forms import ModelForm
+from face.models import Order, Products
 
-class OrderForm(forms.ModelForm):
+
+class OrderForm(ModelForm):
     class Meta:
-        model = Orders
+        model = Order
+        fields = ['date', 'subdivision', 'reason', 'where']
+        exclude = ['']
+
+
+class ProductsForm(ModelForm):
+    class Meta:
+        model = Products
+        fields = ['name', 'price', 'quantity', 'measurement']
         exclude = ['']

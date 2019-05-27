@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class FaceConfig(AppConfig):
+class ForumConfig(AppConfig):
     name = 'face'

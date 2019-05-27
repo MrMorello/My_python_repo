@@ -1,41 +1,45 @@
 from django.db import models
 
 
-# Create your models here.
-class Orders(models.Model):
-    date_time = models.DateTimeField
-    subdivision = models.CharField(max_length=100)
-    reason = models.CharField(max_length=100)
-    to_whom = models.CharField(max_length=50)
+class Order(models.Model):
+    date = models.DateField(verbose_name='Дата вывоза')
+    subdivision = models.CharField(max_length=50, verbose_name='Подразделение')
+    reason = models.CharField(max_length=50, verbose_name='Причина')
+    where = models.CharField(max_length=50, verbose_name='Куда')
 
-    def __str__(self):
-        return "%s %s" % (self.subdivision, self.to_whom)
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
 
 
-class Names(models.Model):
-    name = models.CharField(max_length=100)
-    quality = models.FloatField
+class Products(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, verbose_name='Наименование')
+    price = models.FloatField(verbose_name='Цена')
+    quantity = models.FloatField(verbose_name='Количество')
 
-    PIECES = 'P'
-    KILOGRAMMS = 'KG'
-    METERS = 'M'
-    KOMPLEKT = 'KT'
+    PIECES = 'шт'
+    KILOGRAMMS = 'кг'
+    METERS = 'м'
+    KOMPLEKT = 'кт'
     MEASUREMENTS = (
-        (PIECES, 'P'),
-        (KILOGRAMMS, 'KG'),
-        (METERS, 'M'),
-        (KOMPLEKT, 'KT'),
+        (PIECES, 'шт'),
+        (KILOGRAMMS, 'кг'),
+        (METERS, 'м'),
+        (KOMPLEKT, 'кт'),
     )
     measurement = models.CharField(
         max_length=2,
         choices=MEASUREMENTS,
-        default=PIECES,
+        default=PIECES, verbose_name='ед. изм'
     )
+
+    class Meta:
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
 
     def is_upperclass(self):
         return self.measurement in (self.PIECES, self.KOMPLEKT)
-
-    Orders = models.ForeignKey(Orders, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
