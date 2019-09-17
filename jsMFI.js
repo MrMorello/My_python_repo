@@ -37,12 +37,18 @@ function checkAge() {
     }
 }
 
-//var checkboxes = document.getElementById('checkBox').checked;
-var checkboxes = document.getElementById('checkBox').value;
-console.log(checkboxes);
+var checkCB;
+function myFunction() {
+    var checkBox = document.getElementById("myCheck");
+     if (checkBox.checked == true) {
+         text.style.display = "block";
+         checkCB = true;
+    } else {
+         checkCB = false;
+    }
+}
 
 function checkAll() {
-    console.log(checkboxes);
     if ((checkAge && checkPasswd) == true) {
         alert("Thank you!");
     } else {
@@ -50,3 +56,6 @@ function checkAll() {
     }
 }
 
+console.log(checkPasswd);
+console.log(checkAge16);
+console.log(checkCB);
