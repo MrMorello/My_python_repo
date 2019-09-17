@@ -35,17 +35,16 @@
                     <input type="password" name="cobfirm_password" id="confirm_password" onKeyUp="check();" />
                     <span id="message"></span>
                 </label>
-             </div>
+            </div>
 
             <div>
                 <label for="age">Возраст</label>
-                <input type="number" name="age" required>
+                <input type="number" id="age" name="age" required onKeyUp="checkAge();">
             </div>
 
             <div class="drop-list">
                 <label for="country">Действие</label>
                 <select id="chooseAction" onchange="changeFunction()">
-                    <!--<option>Выберите действие</option>-->
                     <option value="Отправить">Отправить</option>
                     <option value="Войти">Войти</option>
                     <option value="Зарегистрироваться">Зарегистрироваться</option>
@@ -55,11 +54,11 @@
 
             <div>
                 <label for="acknowledged">Ознакомлен</label>
-                <input type="checkbox" name="acknowledged" required>
+                <input type="checkbox" name="acknowledged" id="checkBox">
             </div>
 
             <div>
-                <button type="submit" id="sendButton" class="btn btn-primary" onmousedown="chechFunction">Отправить</button>
+                <button type="submit" id="sendButton" class="btn btn-primary" onclick="checkAll()">Отправить</button>
             </div>
         </form>
     </div>
