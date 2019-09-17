@@ -1,5 +1,6 @@
 ﻿// Change inscription on "submit" button
-function changeFunction() {
+function changeFunction() { // старайся подбирать названия функций так, чтобы было понятно, что она делает. Например changeSendButtonTitle.
+    // в идеале, что делает функция должно быть понятно из её названия любому, кто знает английский без копания в коде.
     var x = document.getElementById("chooseAction").value;
     document.getElementById("sendButton").innerHTML = x;
 }
@@ -12,8 +13,8 @@ function deleteSpaces() {
 }
 
 // Chech equal of passwords
-var checkPasswd = true
-function check() {
+var checkPasswd = true // по умолчанию лучше false. потому что если эта функция не будет вызвана (если чел ничего не будет взаимодействовать с полями паролей), то форма будет считать, что все ок.
+function check() { // тоже неудачное название. Лучше что-то типа isPasswordsEqual. Или checkPasswords. Или checkPasswordsEqual
     if (document.getElementById('password').value ==
         document.getElementById('confirm_password').value) {
         document.getElementById('message').style.color = 'green';
@@ -27,8 +28,8 @@ function check() {
 }
 
 // Check Age
-var checkAge16 = true;
-function checkAge() {
+var checkAge16 = true; // лучше по умолчанию false
+function checkAge() { // название норм, понятно что проверяет.
     var age = document.getElementById("age").value;
     if (age >= 16 && age <= 120) {
         checkAge16 = true;
@@ -39,7 +40,7 @@ function checkAge() {
 
 // check checkbox
 var checkCB;
-function myFunction() {
+function myFunction() { // название не норм. не понятно что проверяет
     var checkBox = document.getElementById("myCheck");
      if (checkBox.checked == true) {
          checkCB = true;
@@ -48,7 +49,7 @@ function myFunction() {
     }
 }
 
-var loginAll
+var loginAll; // название лучше что-то типа isLoginValid
 function checkLogin() {
     regexpCh = document.getElementById("login");
     var letters = /^[A-Za-z0-9]+$/;
@@ -62,7 +63,7 @@ function checkLogin() {
 
 
 function checkAll() {
-    if ((loginAll && checkCB && checkAge16 && checkPasswd) == true) {
+    if ((loginAll && checkCB && checkAge16 && checkPasswd) == true) { // тут лучше сравнивать без приведения типов (используй не ==, а ===)
         alert("Thank you!");
     } else {
         alert("Invalid values");
