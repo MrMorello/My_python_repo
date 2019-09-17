@@ -13,7 +13,7 @@ function deleteSpaces() {
 }
 
 // Chech equal of passwords
-var checkPasswd = true // по умолчанию лучше false. потому что если эта функция не будет вызвана (если чел ничего не будет взаимодействовать с полями паролей), то форма будет считать, что все ок.
+var checkPasswd = true; // по умолчанию лучше false. потому что если эта функция не будет вызвана (если чел ничего не будет взаимодействовать с полями паролей), то форма будет считать, что все ок.
 function check() { // тоже неудачное название. Лучше что-то типа isPasswordsEqual. Или checkPasswords. Или checkPasswordsEqual
     if (document.getElementById('password').value ==
         document.getElementById('confirm_password').value) {
