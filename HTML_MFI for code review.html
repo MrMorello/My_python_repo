@@ -1,0 +1,66 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MFI form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="D:\Denide\MFI Web\jsMFI.js"></script>
+</head>
+
+<body>
+    <div class="obertkaFormy">
+
+        <h1>Форма</h1>
+
+        <form method="post" action="">
+
+            <div>
+                <label for="lastname">Фамилия:</label>
+                <input type="text" name="lastname" id="lastname" onblur="deleteSpaces()" required>
+            </div>
+
+            <div>
+                <label for="login">Логин:</label>
+                <input type="text" name="login" id="login" onKeyUp="checkLogin()" required>
+            </div>
+
+            <div>
+                <label>
+                    Пароль:
+                    <input name="password" id="password" type="password" onKeyUp="check();" />
+                </label>
+                <br>
+                <label>
+                    Подтверждение пароля:
+                    <input type="password" name="cobfirm_password" id="confirm_password" onKeyUp="check();" />
+                    <span id="message"></span>
+                </label>
+            </div>
+
+            <div>
+                <label for="age">Возраст</label>
+                <input type="number" id="age" name="age" required onKeyUp="checkAge();">
+            </div>
+
+            <div class="drop-list">
+                <label for="country">Действие</label>
+                <select id="chooseAction" onchange="changeFunction()">
+                    <option value="Отправить">Отправить</option>
+                    <option value="Войти">Войти</option>
+                    <option value="Зарегистрироваться">Зарегистрироваться</option>
+                </select>
+                <div class="select-arrow"></div>
+            </div>
+
+            <div>
+                <label>Ознакомлен</label>
+                <input type="checkbox" name="acknowledged" id="myCheck" onclick="myFunction()">
+            </div>
+
+            <div>
+                <button type="submit" id="sendButton" class="btn btn-primary" onclick="checkAll()">Отправить</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
