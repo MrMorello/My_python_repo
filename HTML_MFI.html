@@ -13,7 +13,7 @@
 
         <h1>Форма</h1>
 
-        <form method="post" action="">
+        <form onsubmit="showPopup();return false">
 
             <div>
                 <label for="lastname">Фамилия:</label>
@@ -59,14 +59,13 @@
             </div>
 
             <div>
-                <button id="sendButton" class="btn btn-primary" onclick="showPopup()">Отправить</button>
-            </div>
-
-            <div class="popup">
-                <span class="popuptext" id="thePopup">A Simple Popup!</span>
+                <button id="sendButton" class="btn btn-primary">Отправить</button>
             </div>
 
         </form>
+    </div>
+    <div class="popup">
+        <span class="popuptext" id="thePopup">A Simple Popup!</span>
     </div>
 </body>
 </html>
