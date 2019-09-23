@@ -7,9 +7,19 @@ namespace Myapp1
     {
         static void Main(string[] args)
         {
-            int[] mas = new int[] { 1, 3, 4, 5, 6, 6, 8, 2, 5, 9, 0 };
+            Console.WriteLine("Введите чисело элементов последовательности");
+            int elem_nums = Int32.Parse(Console.ReadLine());
+            int[] mas = new int[elem_nums];
+            Console.WriteLine($"Введите {elem_nums} чисел");
+            for (int i = 0; i < mas.Length; i++)
+            {
+                Console.Write("{0}-е число: ", i + 1);
+                mas[i] = Int32.Parse(Console.ReadLine());
+            }
+
+            /* int[] mas = new int[] { 1, 3, 4, 5, 6, 6, 8, 2, 5, 9, 0 };
             Console.WriteLine(string.Join(",", Sort(mas)));
-            Console.ReadKey();
+            Console.ReadKey(); */
 
         }
         public static int[] Sort(int[] massive)
