@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup as bs
+import pandas as pd
 
 headers = {'accept':'*/*',
            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'}
@@ -7,6 +8,14 @@ base_url = 'https://www.gipernn.ru/dom/gorod-nizhniY-novgorod?per-page=100&page=
 
 def hh_parse(base_url, headers):
     real_estate = []
+    district = None
+    addres = None
+    material = None
+    flors_number = None
+    year_buid = None
+    appartment_number = None
+    mean_price_sqr_m = None
+
     session = requests.session()
     requset = session.get(base_url, headers=headers, verify=False)
     if requset.status_code == 200:
@@ -18,7 +27,7 @@ def hh_parse(base_url, headers):
                 pass
             else:
                 district = div.span.text
-                print(district)
+                #print(district)
 # addres - адрес
             if div.td == None:
                 pass
@@ -27,7 +36,7 @@ def hh_parse(base_url, headers):
                     pass
                 else:
                     addres = div.td.next.next.next.a.text
-                    print(addres)
+                    #print(addres)
 # material - материал стен
             if div.td == None:
                 pass
@@ -36,7 +45,7 @@ def hh_parse(base_url, headers):
                     pass
                 else:
                     material = div.td.next.next.next.next.next.next.next.next.next.text
-                    print(material)
+                    #print(material)
 # flors_number - этажность
             if div.td == None:
                 pass
@@ -74,7 +83,15 @@ def hh_parse(base_url, headers):
                     mean_price_sqr_m = div.span.next.next.next.next.next.next.next.next.next.next.next.next.text
                     mean_price_sqr_m = "".join(mean_price_sqr_m.split())
                     #print(mean_price_sqr_m)
-
+            real_estate.append({
+                'district': district,
+                'addres': addres,
+                'material': material,
+                'flors_number': flors_number,
+                'year_buid': year_buid,
+                'appartment_number': appartment_number,
+                'mean_price_sqr_m': mean_price_sqr_m
+            })
         print(len(real_estate))
     else:
         print('ERRRRoR')
