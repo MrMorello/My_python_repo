@@ -1,0 +1,26 @@
+git -c http.sslVerify=false push origin master - пушить на гит.
+
+git -c http.sslVerify=false clone
+
+
+
+
+pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org <package_name> 'Использовать когда ругается на сертификат'
+
+--user "(в конце) использовать когда ошибка [5]"
+
+You may want to add the trusted hosts and proxy to your config file.
+
+pip.ini (Windows) or pip.conf (unix)
+
+[global]
+trusted-host = pypi.python.org
+               pypi.org
+               files.pythonhosted.org
+
+
+Для установки через anaconda prompt:
+
+	conda config --set ssl_verify false
+	conda config --show
+	conda install tensorflow
