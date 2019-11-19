@@ -1,0 +1,295 @@
+﻿<agent name="test_xml">      <!-- Agent - это проект  -->
+
+    <units>
+        
+        <unit name="test_unit">       <!-- logic unit - это логический модуль, в котором собраны функции (actions), логических модулей может быть сколько угодно много -->  
+
+                 <!-- у всех функций есть параметр  label - это метка к котрой можно перейти в рамках одного logic unit. label - не обязательный параметр, 
+                 формат label следующий:   <param name="label" value="label_name"/> , переход к lable осуществляется при помощи action goto (безусловный переход) или if (условный переход) -->            
+            
+            <action name="playback">  <!-- playback  - функция проигрывания промпта, в качестве параметра указываетяс имя промпта   -->
+               <params>
+                 <param name="data" value="test_prompt"/> <!-- есть проверка на существование промта -->
+               </params>
+            </action>            
+            
+            <action name="play_and_detect_speech">   <!-- play_and_detect_speech  - функция распознавания речи   -->  
+                <params>
+                 <param name="no_input_timeout" value="2000"/>  <!-- время ожидания ввода, если за это время ничего не было сказано, то отбивка с статусом NULL  -->  
+                 <param name="recognition_timeout" value="30000"/>  <!-- лимит времени распознавания  -->  
+                 <param name="speech_complete_timeout" value="1000"/>  <!-- пауза , после которой срабатывает тригер окончания речи   --> 
+                 <param name="timer" value="true"/>  <!-- вкл / выкл вышеуказанные таймеры   --> 
+                    <param name="json">[[{"NULL":"hangup_null","entities":["connection_score","connection","tariff","wrong_time","call_back","dont_distirb","robot","question","repeat","who_are_you"]}],[]]  <!-- перечень параметров в формате json : "NULL": - куда переходить по отбивке по NULL,  "entities": - какие сущности распознавать --> 
+                 </param>
+               </params>
+            </action>
+            
+             <action name="play_and_detect_digit">   <!-- play_and_detect_digit  - функция распознавания цифр , идиентична play_and_detect_speech  -->  
+               <params>
+                 <param name="no_input_timeout" value="2000"/>
+                 <param name="recognition_timeout" value="30000"/>
+                 <param name="speech_complete_timeout" value="7000"/>
+                 <param name="timer" value="true"/>
+                 <param name="json">[[{"NULL":"hangup_null","entities":["connection_score","connection","tariff","wrong_time","call_back","dont_distirb","robot","question","repeat","who_are_you"]}],[]]
+                 </param>
+               </params>
+            </action>
+                       
+            <action name="if">   
+                <!-- if - функция условных переходов в формате entity(переменная/сущность)==value(значение)?goto_1(указазывается logic unit или label в рамках этого же logic unit если условие соблюдается, может быть значение null):goto_2(указазывается logic unit или label в рамках этого же logic unit если условие НЕ соблюдается)    --> 
+                <!-- операторы сравнения :  == , !=, =~,!~, >, <  ,   --> 
+               <params>
+                 <param name="data">repeat=="true"?label_name:logic_name</param>
+               </params>
+            </action>
+           
+            
+            <action name="set">  <!-- set  - функция присванивания значения для сущности или переменной   -->
+               <params>
+                 <param name="data">cold_water_temp="true"::str</param>   <!-- если переменная используется впервые, то должен быть указан тип перемнной: int,str, date, time, datetime -->              
+               </params>
+            </action>            
+            
+            <action name="set">  <!-- set  - функция присванивания значения для сущности или переменной   -->
+               <params>
+                 <param name="data">entity_1=null</param>               
+               </params>
+            </action>             
+            
+             <action name="set">  
+               <params>
+                 <param name="data">entity_2="2"</param>               
+               </params>
+            </action> 
+
+            <action name = "tag">  <!-- tag  - функция присванивания tag , используется для отчестности , в качестве параметра указываетяс имя тега   -->
+               <params>
+                 <param name="data" value="test_tag"/> <!-- есть проверка на существование тэга -->
+               </params>
+            </action>
+            
+            <action name="hangup">  <!-- hangup  - функция завершения вызова  -->
+            </action>
+            
+
+             <action name="goto"> <!-- goto - функция перехода к logic unit или label в рмках одного logic unit-->
+               <params>
+                 <param name="data" value="test_unit_name"/>  <!-- проверки на существоания unit name нет -->
+               </params>
+            </action>           
+
+            <action name="say">  <!-- say - функция проигрывания значения сущности-->
+               <params>
+                 <param name="data" value="name_query"/>
+               </params>
+            </action>            
+            
+            <action name="say_number">  <!-- say_number - функция проигрывания значения сущности в формате единого числа (напрмер 123 проиграет как "сто двадцать три") -->
+               <params>
+                 <param name="data" value="name_query"/>
+               </params>
+            </action>
+            
+            <action name="say_digits">  <!-- say_digits - функция проигрывания значения сущности в формате каждое число отдельно (напрмер 123 проиграет как "один два три")  -->
+               <params>
+                 <param name="data" value="37"/>
+               </params>
+            </action>
+            
+            <action name="say_date"> <!-- say_date - функция проигрывания значения сущности в формате даты  -->
+               <params>
+                 <param name="data" value="date_temp"/>
+               </params>                
+            </action>
+            
+            <action name="say_time">   <!-- say_date - функция проигрывания значения сущности в формате времени  -->
+               <params> 
+                 <param name="data" value="time_temp"/>
+               </params>                 
+            </action>
+            
+            <action name="say_datetime">  <!-- say_date - функция проигрывания значения сущности в формате даты и времени  -->
+               <params>
+                 <param name="data" value="datetime_temp"/>
+               </params>                
+            </action>            
+            
+            
+             <action name="bridge">  <!-- bridge - функция маршрутизации вызова, в качестве параметра указывается маршрут  -->
+               <params>
+                 <param name="data">sofia/pstn/3309@95.128.179.99</param>
+               </params>
+            </action>
+            
+
+            <action name="sleep">   <!-- sleep - пауза , в качестве параметра указывается время паузы в мс -->
+               <params>
+                 <param name="data" value="2000"/>
+               </params>
+            </action>
+            
+             <action name="sms">  <!-- sms- функция отправки SMS сообщения , в качестве параметра указывается текст SMS -->
+               <params>
+                 <param name="data" value="privet"/>
+               </params>
+            </action>
+            
+            <action name="recall">  <!-- recall - функция перезвонить  -->
+            </action>
+            
+
+            
+            <action name="say_date_2">  <!-- не используется  -->
+            </action>
+            
+            <action name="say_time_2">  <!-- не используется  -->
+            </action>
+            
+            <action name="say_datetime_2">  <!-- не используется  -->
+            </action>
+            
+            <action name="save_data">  <!-- не используется  -->
+            </action>
+          
+            <action name="conditional_goto">  <!-- не используется  -->
+               <params>
+                 <param name="data" value="hot_water_1_meter?291:313"/>
+               </params>
+            </action>
+            
+            <action name="wrong_amount">  <!-- не используется  -->
+               <params>
+                 <param name="data" value="hot_water_1_temp?358"/>
+               </params>
+            </action>
+            
+            
+        </unit>
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      <unit name="hello_logic">
+        <action name="playback">
+          <params>
+            <param name="data" value="hello"/>
+          </params>
+        </action>
+
+        <action name="play_and_detect_speech">
+          <!-- play_and_detect_speech  - функция распознавания речи   -->
+          <params>
+            <param name="no_input_timeout" value="2000"/>
+            <!-- время ожидания ввода, если за это время ничего не было сказано, то отбивка с статусом NULL  -->
+            <param name="recognition_timeout" value="30000"/>
+            <!-- лимит времени распознавания  -->
+            <param name="speech_complete_timeout" value="1000"/>
+            <!-- пауза , после которой срабатывает тригер окончания речи   -->
+            <param name="timer" value="true"/>
+            <!-- вкл / выкл вышеуказанные таймеры   -->
+            <param name="json">
+              [
+              [
+              {
+              "NULL": "hello_null",
+              "entities": []
+              },
+              {
+              "Да": "recommend_main",
+              "entities": ["confirm"]
+              },
+              {
+              "Нет": "hangup_wrong_time",
+              "entities": ["confirm"]
+              },
+              {
+              "Занят": "hangup_wrong_time",
+              "entities": ["wrong_time"]
+              },
+              {
+              "Еще раз": "hello_repeat",
+              "entities": ["repeat"]
+              }
+              ],
+              []
+              ]
+                <!-- перечень параметров в формате json : "NULL": - куда переходить по отбивке по NULL,  "entities": - какие сущности распознавать -->
+            </param>
+          </params>
+        </action>
+
+        <action name="if">
+          <!-- if - функция условных переходов в формате entity(переменная/сущность)==value(значение)?goto_1(указазывается logic unit или label в рамках этого же logic unit если условие соблюдается, может быть значение null):goto_2(указазывается logic unit или label в рамках этого же logic unit если условие НЕ соблюдается)    -->
+          <!-- операторы сравнения :  == , !=, =~,!~, >, <  ,   -->
+          <params>
+            <param name="data">
+              confirm=="true"?recommend_main:hangup_wrong_time</param>
+          </params>
+        </action>
+
+
+      </unit>
+
+      <unit name="main_logic">
+        <action name="playback">
+          <params>
+            <param name="data" value="recommend_main"/>
+          </params>
+        </action>
+
+
+        <action name="play_and_detect_digit">
+          <!-- play_and_detect_digit  - функция распознавания цифр , идиентична play_and_detect_speech  -->
+          <params>
+            <param name="no_input_timeout" value="2000"/>
+            <param name="recognition_timeout" value="30000"/>
+            <param name="speech_complete_timeout" value="7000"/>
+            <param name="timer" value="true"/>
+            <param name="json">
+              [
+              [
+              {
+              "NULL": "hangup_null",
+              "entities": [
+              "connection_score",
+              "connection",
+              "tariff",
+              "wrong_time",
+              "call_back",
+              "dont_distirb",
+              "robot",
+              "question",
+              "repeat",
+              "who_are_you"
+              ]
+              },
+              {
+              "DEFAULT": "recommend_default",
+              "entities": []
+              },
+              {
+              "0-8": "hangup_negative",
+              "entities": ["recommendation_score"]
+              }
+              ],
+              []
+              ]
+            </param>
+          </params>
+        </action>
+      </unit>
+    </units>
+</agent>
