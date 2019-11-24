@@ -1,0 +1,469 @@
+<agent name="try_xml">
+
+    <units>
+      <unit name="hello_logic">
+
+            <action name="playback">
+              <params>
+                <param name="data" value="hello"/>
+              </params>
+                      </action>                     <!-- #Приветствие-->
+
+            <action name="play_and_detect_speech">
+              <params>
+                <param name="label" value="hello_first_and_repeat"/>
+                <param name="no_input_timeout" value="2000"/>
+                <param name="recognition_timeout" value="30000"/>
+                <param name="speech_complete_timeout" value="1000"/>
+                <param name="timer" value="true"/>
+                <param name="json">
+                  [
+                  [
+                  {
+                  "NULL": "hello_null",
+                  "entities": []
+                  },
+                  {
+                  "Да": "main_logic",
+                  "entities": ["confirm"]
+                  },
+                  {
+                  "Нет": "hangup_logic",
+                  "entities": ["confirm"]
+                  },
+                  {
+                  "Занят": "hangup_logic",
+                  "entities": ["wrong_time"]
+                  },
+                  {
+                  "Еще раз": "hello_repeat",
+                  "entities": ["repeat"]
+                  },
+                  {
+                  "DEFAULT": "main_logic",
+                  "entities": []
+                  }
+                  ],
+                  []
+                  ]
+                </param>
+              </params>
+            </action>       <!-- First detection 1st unit-->
+
+           <action name="playback">
+              <params>
+                <param name="label" value="hello_repeat"/>
+                <param name="data" value="hello_repeat"/>
+              </params>
+            </action>                       <!-- Ответ на 'Еще раз'-->
+           <action name="goto">
+               <params>
+                 <param name="data" value="hello_first_and_repeat"/>
+               </params>
+            </action>                           <!-- GOTO First detection 1st unit-->
+
+           <action name="playback">
+              <params>
+                <param name="label" value="hello_null"/>
+                <param name="data" value="hello_null"/>
+              </params>
+            </action>                        <!-- Null Answer-->
+           <action name="play_and_detect_speech">
+              <params>
+                <param name="no_input_timeout" value="2000"/>
+                <param name="recognition_timeout" value="30000"/>
+                <param name="speech_complete_timeout" value="1000"/>
+                <param name="timer" value="true"/>
+                <param name="json">
+                  [
+                  [
+                  {
+                  "NULL": "hangup_logic",
+                  "entities": []
+                  },
+                  {
+                  "Да": "main_logic",
+                  "entities": ["confirm"]
+                  },
+                  {
+                  "Нет": "hangup_logic",
+                  "entities": ["confirm"]
+                  },
+                  {
+                  "Занят": "hangup_logic",
+                  "entities": ["wrong_time"]
+                  },
+                  {
+                  "Еще раз": "hello_repeat",
+                  "entities": ["repeat"]
+                  },
+                  {
+                  "DEFAULT": "main_logic",
+                  "entities": []
+                  }
+                  ],
+                  []
+                  ]
+                </param>
+              </params>
+            </action>          <!-- Second_detection for Null -->
+
+      </unit>
+
+      <unit name="main_logic">
+
+        <action name="playback">
+          <params>
+            <param name="label" value="recommend_main"/>
+            <param name="data" value="recommend_main"/>
+          </params>
+        </action>                       <!-- first phrase 2nd unit -->
+        <action name="play_and_detect_speech">
+              <params>
+                <param name="label" value="main_first_and_repeat"/>
+                <param name="no_input_timeout" value="2000"/>
+                <param name="recognition_timeout" value="30000"/>
+                <param name="speech_complete_timeout" value="1000"/>
+                <param name="timer" value="true"/>
+                <param name="json">
+                  [
+                  [
+                  {
+                  "NULL": "recommend_null",
+                  "entities": []
+                  },
+                  {
+                  "DEFAULT": "main_detect_digit",
+                  "entities": []
+                  },
+                  {
+                  "Нет": "recommend_score_negative",
+                  "entities": ["recommendation"]
+                  },
+                  {
+                  "Возможно": "recommend_score_neutral",
+                  "entities": ["recommendation"]
+                  },
+                  {
+                  "Да": "recommend_score_positive",
+                  "entities": ["recommendation"]
+                  },
+                  {
+                  "Еще раз": "recommend_repeat",
+                  "entities": ["repeat"]
+                  },
+                  {
+                  "Незнаю": "recommend_repeat_2",
+                  "entities": ["recommendation"]
+                  },
+                  {
+                  "Занят": "hangup_logic",
+                  "entities": ["wrong_time"]
+                  },
+                  {
+                  "Вопрос": "forward_logic",
+                  "entities": ["question"]
+                  }
+                  ],
+                  []
+                  ]
+                </param>
+              </params>
+        </action>
+        <action name="play_and_detect_digit">
+              <params>
+                <param name="label" value="main_detect_digit"/>
+                <param name="no_input_timeout" value="2000"/>
+                <param name="recognition_timeout" value="30000"/>
+                <param name="speech_complete_timeout" value="1000"/>
+                <param name="timer" value="true"/>
+                <param name="json">
+                  [
+                  [
+                  {
+                  "DEFAULT": "recommend_default",
+                  "entities": []
+                  },
+                  {
+                  "[0-8]": "hangup_logic",
+                  "entities": ["recommendation_score"]
+                  },
+                  {
+                  "[9|10]": "hangup_logic",
+                  "entities": ["recommendation_score"]
+                  }
+                  ],
+                  []
+                  ]
+                </param>
+              </params>
+         </action>          <!-- Firs_detection -->
+
+        <action name="play_and_detect_speech">
+              <params>
+                <param name="label" value="main_null_and_default"/>
+                <param name="no_input_timeout" value="2000"/>
+                <param name="recognition_timeout" value="30000"/>
+                <param name="speech_complete_timeout" value="1000"/>
+                <param name="timer" value="true"/>
+                <param name="json">
+                  [
+                  [
+                  {
+                  "NULL": "hangup_logic",
+                  "entities": []
+                  },
+                  {
+                  "DEFAULT": "main_second_digit_detection",
+                  "entities": []
+                  },
+                  {
+                  "Нет": "recommend_score_negative",
+                  "entities": ["recommendation"]
+                  },
+                  {
+                  "Возможно": "recommend_score_neutral",
+                  "entities": ["recommendation"]
+                  },
+                  {
+                  "Да": "recommend_score_positive",
+                  "entities": ["recommendation"]
+                  },
+                  {
+                  "Еще раз": "recommend_repeat",
+                  "entities": ["repeat"]
+                  },
+                  {
+                  "Незнаю": "recommend_repeat_2",
+                  "entities": ["recommendation"]
+                  },
+                  {
+                  "Занят": "hangup_logic",
+                  "entities": ["wrong_time"]
+                  },
+                  {
+                  "Вопрос": "forward_logic",
+                  "entities": ["question"]
+                  }
+                  ],
+                  []
+                  ]
+                </param>
+              </params>
+        </action>
+        <action name="play_and_detect_digit">
+              <params>
+                <param name="label" value="main_second_digit_detection"/>
+                <param name="no_input_timeout" value="2000"/>
+                <param name="recognition_timeout" value="30000"/>
+                <param name="speech_complete_timeout" value="1000"/>
+                <param name="timer" value="true"/>
+                <param name="json">
+                  [
+                  [
+                  {
+                  "DEFAULT": "hangup_logic",
+                  "entities": []
+                  },
+                  {
+                  "[0-8]": "hangup_logic",
+                  "entities": ["recommendation_score"]
+                  },
+                  {
+                  "[9|10]": "hangup_logic",
+                  "entities": ["recommendation_score"]
+                  }
+                  ],
+                  []
+                  ]
+                </param>
+              </params>
+         </action>          <!-- Second_detection for Null & Default -->
+
+        <action name="playback">
+          <params>
+            <param name="label" value="recommend_default"/>
+            <param name="data" value="recommend_default"/>
+          </params>
+        </action>                       <!-- DEFAULT Answer -->
+        <action name="goto">
+          <params>
+            <param name="data" value="main_null_and_default"/>
+          </params>
+        </action>                           <!-- Goto main_null_and_default -->
+
+        <action name="playback">
+          <params>
+            <param name="label" value="recommend_null"/>
+            <param name="data" value="recommend_null"/>
+          </params>
+        </action>                       <!-- Null Answer -->
+        <action name="goto">
+          <params>
+            <param name="data" value="main_null_and_default"/>
+          </params>
+        </action>                           <!-- Goto main_null_and_default -->
+
+        <action name="playback">
+          <params>
+            <param name="label" value="recommend_score_negative"/>
+            <param name="data" value="recommend_score_negative"/>
+          </params>
+        </action>                       <!-- Ответ на Нет -->
+        <action name="goto">
+          <params>
+            <param name="data" value="main_first_and_repeat"/>
+          </params>
+        </action>                           <!-- Goto Firs_detection -->
+
+        <action name="playback">
+          <params>
+            <param name="label" value="recommend_score_neutral"/>
+            <param name="data" value="recommend_score_neutral"/>
+          </params>
+        </action>                       <!-- Ответ на Возможно -->
+        <action name="goto">
+          <params>
+            <param name="data" value="main_first_and_repeat"/>
+          </params>
+        </action>                           <!-- Goto Firs_detection -->
+
+        <action name="playback">
+          <params>
+            <param name="label" value="recommend_score_positive"/>
+            <param name="data" value="recommend_score_positive"/>
+          </params>
+        </action>                       <!-- Ответ на Да -->
+        <action name="goto">
+          <params>
+            <param name="data" value="main_first_and_repeat"/>
+          </params>
+        </action>                           <!-- Goto Firs_detection -->
+
+        <action name="playback">
+          <params>
+            <param name="label" value="recommend_repeat"/>
+            <param name="data" value="recommend_repeat"/>
+          </params>
+        </action>                       <!-- Ответ на Еще раз -->
+        <action name="goto">
+          <params>
+            <param name="data" value="main_first_and_repeat"/>
+          </params>
+        </action>                           <!-- Goto Firs_detection -->
+
+        <action name="playback">
+          <params>
+            <param name="label" value="recommend_repeat_2"/>
+            <param name="data" value="recommend_repeat_2"/>
+          </params>
+        </action>                       <!-- Ответ на Не знаю -->
+        <action name="goto">
+          <params>
+            <param name="data" value="main_first_and_repeat"/>
+          </params>
+        </action>                           <!-- Goto Firs_detection -->
+
+      </unit>
+
+      <unit name="hangup_logic">
+
+        <action name="if">
+          <params>
+            <param name="data">confirm=="false" || wrong_time="true"?hangup_wrong_time:is_negative</param>        <!-- я не уверен в возможности использования оператора OR (Если нельзя, то будет еще один "If action") -->
+          </params>
+        </action>                             <!-- hangup_wrong_time:is_negative -->
+
+        <action name="if">
+          <params>
+            <param name="label" value="is_negative"/>
+            <param name="data">recommendation_score==[0..8]?hangup_negative:is_positive</param>
+          </params>
+        </action>                             <!-- hangup_negative:is_positive -->
+
+        <action name="if">
+          <params>
+            <param name="label" value="is_positive"/>
+            <param name="data">recommendation_score==9||10?hangup_positive:hangup_null</param>
+          </params>
+        </action>                             <!-- hangup_positive:hangup_null -->
+
+        <action name="playback">
+          <params>
+            <param name="label" value="hangup_wrong_time"/>
+            <param name="data" value="hangup_wrong_time"/>
+          </params>
+        </action>                       <!-- hangup_wrong_time -->
+        <action name = "tag">
+          <params>
+            <param name="data" value="нет времени для разговора"/>
+          </params>
+        </action>                           <!-- нет времени для разговора -->
+        <action name="hangup">
+        </action>
+
+        <action name="playback">
+          <params>
+            <param name="label" value="hangup_null"/>
+            <param name="data" value="hangup_null"/>
+          </params>
+        </action>                       <!-- hangup_null -->
+        <action name = "tag">
+          <params>
+            <param name="data" value="проблемы с распознаванием"/>
+          </params>
+        </action>                           <!-- проблемы с распознаванием -->
+        <action name="hangup">
+        </action>
+
+        <action name="playback">
+          <params>
+            <param name="label" value="hangup_positive"/>
+            <param name="data" value="hangup_positive"/>
+          </params>
+        </action>                       <!-- hangup_positive -->
+        <action name = "tag">
+          <params>
+            <param name="data" value="высокая оценка"/>
+          </params>
+        </action>                           <!-- высокая оценка -->
+        <action name="hangup">
+        </action>
+
+        <action name="playback">
+          <params>
+            <param name="label" value="hangup_negative"/>
+            <param name="data" value="hangup_negative"/>
+          </params>
+        </action>                       <!-- hangup_negative -->
+        <action name = "tag">
+          <params>
+            <param name="data" value="низкая оценка"/>
+          </params>
+        </action>                           <!-- низкая оценка -->
+        <action name="hangup">
+        </action>
+
+      </unit>
+
+      <unit name="forward_logic">
+        <action name="playback">
+          <params>
+            <param name="data" value="forward"/>
+          </params>
+        </action>
+        <action name = "tag">
+          <params>
+            <param name="data" value="перевод на оператора"/>
+          </params>
+        </action>                           <!-- перевод на оператора -->
+        <action name="bridge">
+               <params>
+                 <param name="data">sofia/pstn/3309@95.128.179.99</param>
+               </params>
+        </action>
+
+      </unit>
+
+    </units>
+</agent>
