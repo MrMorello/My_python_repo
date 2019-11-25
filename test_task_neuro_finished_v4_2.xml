@@ -1,0 +1,475 @@
+<agent name="try_xml">
+
+    <units>
+        <unit name="hello_logic">
+
+            <action name="playback">
+                <params>
+                    <param name="data" value="hello"/>
+                </params>
+            </action>                     <!-- #Приветствие-->
+
+            <action name="play_and_detect_speech">
+                <params>
+                    <param name="label" value="hello_first_and_repeat"/>
+                    <param name="no_input_timeout" value="2000"/>
+                    <param name="recognition_timeout" value="30000"/>
+                    <param name="speech_complete_timeout" value="1000"/>
+                    <param name="timer" value="true"/>
+                    <param name="json">
+                        [
+                        [
+                        {
+                        "NULL": "hello_null",
+                        "entities": ["confirm", "wrong_time", "repeat"]
+                        }
+                        ],
+                        []
+                        ]
+                    </param>
+                </params>
+            </action>       <!-- FIRST detection 1st unit-->
+
+            <!-- conditions_list -->
+            <action name="if">
+                <params>
+                    <param name="label" value="conditions_list"/>
+                    <param name="data">confirm=="true"?main_logic
+                    </param>
+                </params>
+            </action>                       <!-- ДА confirm=="true"?main_logic -->
+            <action name="if">
+                <params>
+                    <param name="label" value="conditions_list"/>
+                    <param name="data">confirm=="false"?hangup_logic
+                    </param>
+                </params>
+            </action>                       <!-- НЕТ confirm=="false"?hangup_logic -->
+            <action name="if">
+                <params>
+                    <param name="data">wrong_time=="true"?hangup_logic
+                    </param>
+                </params>
+            </action>                       <!-- ЗАНЯТ wrong_time=="true"?hangup_logic -->
+            <action name="if">
+                <params>
+                    <param name="data">repeat=="true"?hello_repeat
+                    </param>
+                </params>
+            </action>                       <!-- ЕЩЕ РАЗ repeat=="true"?hello_repeat -->
+            <!-- если ниодно из условий не подошло - DEFAULT -->
+            <action name="goto">
+                <params>
+                    <param name="data" value="main_logic"/>
+                </params>
+            </action>                           <!-- DEFAULT - GOTO main_logic -->
+
+            <action name="playback">
+                <params>
+                    <param name="label" value="hello_repeat"/>
+                    <param name="data" value="hello_repeat"/>
+                </params>
+            </action>                       <!-- Ответ на 'Еще раз'-->
+            <action name="goto">
+                <params>
+                    <param name="data" value="hello_first_and_repeat"/>
+                </params>
+            </action>                           <!-- GOTO First detection 1st unit-->
+
+            <action name="playback">
+                <params>
+                    <param name="label" value="hello_null"/>
+                    <param name="data" value="hello_null"/>
+                </params>
+            </action>                        <!-- Null Answer-->
+            <action name="play_and_detect_speech">
+                <params>
+                    <param name="no_input_timeout" value="2000"/>
+                    <param name="recognition_timeout" value="30000"/>
+                    <param name="speech_complete_timeout" value="1000"/>
+                    <param name="timer" value="true"/>
+                    <param name="json">
+                        [
+                        [
+                        {
+                        "NULL": "hangup_logic",
+                        "entities": ["confirm", "wrong_time", "repeat"]
+                        }
+                        ],
+                        []
+                        ]
+                    </param>
+                </params>
+            </action>          <!-- SECOND detection 1st unit -->
+            <action name="goto">
+                <params>
+                    <param name="data" value="conditions_list"/>
+                </params>
+            </action>                           <!-- GOTO conditions_list-->
+
+        </unit>
+
+        <unit name="main_logic">
+
+            <action name="playback">
+                <params>
+                    <param name="data" value="recommend_main"/>
+                </params>
+            </action>                       <!-- first phrase 2nd unit -->
+            <action name="play_and_detect_speech">
+                <params>
+                    <param name="label" value="main_first_and_repeat"/>
+                    <param name="no_input_timeout" value="2000"/>
+                    <param name="recognition_timeout" value="30000"/>
+                    <param name="speech_complete_timeout" value="1000"/>
+                    <param name="timer" value="true"/>
+                    <param name="json">
+                        [
+                        [
+                        {
+                        "NULL": "recommend_null",
+                        "entities": ["recommendation", "repeat", "wrong_time", "question", "recommendation_score"]
+                        }
+                        ],
+                        []
+                        ]
+                    </param>
+                </params>
+            </action>           <!-- FIRST detection 2nd unit-->
+
+            <!-- conditions_list -->
+            <action name="if">
+                <params>
+                    <param name="label" value="conditions_list"/>
+                    <param name="data">recommendation_score==[0-8]?hangup_logic
+                    </param>
+                </params>
+            </action>                       <!-- [0-8] recommendation_score==[0-8]?hangup_logic -->
+            <action name="if">
+                <params>
+                    <param name="data">recommendation_score==9?hangup_logic
+                    </param>
+                </params>
+            </action>                       <!-- [9-10] recommendation_score==9?hangup_logic -->
+            <action name="if">
+                <params>
+                    <param name="data">recommendation=="negative"?recommend_score_negative
+                    </param>
+                </params>
+            </action>                       <!-- НЕТ recommendation=="negative"?recommend_score_negative -->
+            <action name="if">
+                <params>
+                    <param name="label" value="conditions_list"/>
+                    <param name="data">recommendation=="neutral"?recommend_score_neutral
+                    </param>
+                </params>
+            </action>                       <!-- ВОЗМОЖНО recommendation=="neutral"?recommend_score_neutral -->
+            <action name="if">
+                <params>
+                    <param name="label" value="conditions_list"/>
+                    <param name="data">recommendation=="positive"?recommend_score_positive
+                    </param>
+                </params>
+            </action>                       <!-- ДА recommendation=="positive"?recommend_score_positive -->
+            <action name="if">
+                <params>
+                    <param name="data">recommendation=="dont_know"?recommend_repeat_2
+                    </param>
+                </params>
+            </action>                       <!-- НЕЗНАЮ recommendation=="dont_know"?recommend_repeat_2 -->
+            <action name="if">
+                <params>
+                    <param name="data">repeat=="true"?recommend_repeat
+                    </param>
+                </params>
+            </action>                       <!-- ЕЩЕ РАЗ repeat=="true"?recommend_repeat -->
+            <action name="if">
+                <params>
+                    <param name="data">wrong_time=="true"?hangup_logic
+                    </param>
+                </params>
+            </action>                       <!-- ЗАНЯТ wrong_time=="true"?hangup_logic -->
+            <action name="if">
+                <params>
+                    <param name="data">question=="true"?forward_logic
+                    </param>
+                </params>
+            </action>                       <!-- ВОПРОС question=="true"?forward_logic -->
+
+            <!-- если ни одно из условий не подошло - DEFAULT -->
+            <action name="playback">
+                <params>
+                    <param name="data" value="recommend_default"/>
+                </params>
+            </action>                       <!-- DEFAULT Answer -->
+
+
+            <action name="play_and_detect_speech">
+                <params>
+                    <param name="label" value="main_null_and_default"/>
+                    <param name="label" value="main_first_and_repeat"/>
+                    <param name="no_input_timeout" value="2000"/>
+                    <param name="recognition_timeout" value="30000"/>
+                    <param name="speech_complete_timeout" value="1000"/>
+                    <param name="timer" value="true"/>
+                    <param name="json">
+                        [
+                        [
+                        {
+                        "NULL": "hangup_null",
+                        "entities": ["recommendation", "repeat", "wrong_time", "question", "recommendation_score"]
+                        }
+                        ],
+                        []
+                        ]
+                    </param>
+                </params>
+            </action>           <!-- SECOND detection 2st unit (main_null_and_default)-->
+            <!-- 2nd conditions_list -->
+            <action name="if">
+                <params>
+                    <param name="label" value="conditions_list"/>
+                    <param name="data">recommendation_score==[0-8]?hangup_logic
+                    </param>
+                </params>
+            </action>                       <!-- [0-8] recommendation_score==[0-8]?hangup_logic -->
+            <action name="if">
+                <params>
+                    <param name="data">recommendation_score==9?hangup_logic
+                    </param>
+                </params>
+            </action>                       <!-- [9-10] recommendation_score==9?hangup_logic -->
+            <action name="if">
+                <params>
+                    <param name="data">recommendation=="negative"?recommend_score_negative
+                    </param>
+                </params>
+            </action>                       <!-- НЕТ recommendation=="negative"?recommend_score_negative -->
+            <action name="if">
+                <params>
+                    <param name="label" value="conditions_list"/>
+                    <param name="data">recommendation=="neutral"?recommend_score_neutral
+                    </param>
+                </params>
+            </action>                       <!-- ВОЗМОЖНО recommendation=="neutral"?recommend_score_neutral -->
+            <action name="if">
+                <params>
+                    <param name="label" value="conditions_list"/>
+                    <param name="data">recommendation=="positive"?recommend_score_positive
+                    </param>
+                </params>
+            </action>                       <!-- ДА recommendation=="positive"?recommend_score_positive -->
+            <action name="if">
+                <params>
+                    <param name="data">recommendation=="dont_know"?recommend_repeat_2
+                    </param>
+                </params>
+            </action>                       <!-- НЕЗНАЮ recommendation=="dont_know"?recommend_repeat_2 -->
+            <action name="if">
+                <params>
+                    <param name="data">repeat=="true"?recommend_repeat
+                    </param>
+                </params>
+            </action>                       <!-- ЕЩЕ РАЗ repeat=="true"?recommend_repeat -->
+            <action name="if">
+                <params>
+                    <param name="data">wrong_time=="true"?hangup_logic
+                    </param>
+                </params>
+            </action>                       <!-- ЗАНЯТ wrong_time=="true"?hangup_logic -->
+            <action name="if">
+                <params>
+                    <param name="data">question=="true"?forward_logic
+                    </param>
+                </params>
+            </action>                       <!-- ВОПРОС question=="true"?forward_logic -->
+
+            <!-- если 2-й раз ни одно из условий не подошло DEFAULT#2 - GOTO hangup_logic -->
+            <action name="goto">
+                <params>
+                    <param name="data" value="hangup_logic"/>
+                </params>
+            </action>                           <!-- GOTO hangup_logic-->
+
+            <action name="playback">
+                <params>
+                    <param name="label" value="recommend_null"/>
+                    <param name="data" value="recommend_null"/>
+                </params>
+            </action>                       <!-- Null Answer -->
+            <action name="goto">
+                <params>
+                    <param name="data" value="main_null_and_default"/>
+                </params>
+            </action>                           <!-- GOTO main_null_and_default-->
+
+            <action name="playback">
+                <params>
+                    <param name="label" value="recommend_score_negative"/>
+                    <param name="data" value="recommend_score_negative"/>
+                </params>
+            </action>                       <!-- Ответ на Нет -->
+            <action name="goto">
+                <params>
+                    <param name="data" value="main_first_and_repeat"/>
+                </params>
+            </action>                           <!-- Goto FIRST_detection -->
+
+            <action name="playback">
+                <params>
+                    <param name="label" value="recommend_score_neutral"/>
+                    <param name="data" value="recommend_score_neutral"/>
+                </params>
+            </action>                       <!-- Ответ на Возможно -->
+            <action name="goto">
+                <params>
+                    <param name="data" value="main_first_and_repeat"/>
+                </params>
+            </action>                           <!-- Goto Firs_detection -->
+
+            <action name="playback">
+                <params>
+                    <param name="label" value="recommend_score_positive"/>
+                    <param name="data" value="recommend_score_positive"/>
+                </params>
+            </action>                       <!-- Ответ на Да -->
+            <action name="goto">
+                <params>
+                    <param name="data" value="main_first_and_repeat"/>
+                </params>
+            </action>                           <!-- Goto Firs_detection -->
+
+            <action name="playback">
+                <params>
+                    <param name="label" value="recommend_repeat"/>
+                    <param name="data" value="recommend_repeat"/>
+                </params>
+            </action>                       <!-- Ответ на Еще раз -->
+            <action name="goto">
+                <params>
+                    <param name="data" value="main_first_and_repeat"/>
+                </params>
+            </action>                           <!-- Goto Firs_detection -->
+
+            <action name="playback">
+                <params>
+                    <param name="label" value="recommend_repeat_2"/>
+                    <param name="data" value="recommend_repeat_2"/>
+                </params>
+            </action>                       <!-- Ответ на Не знаю -->
+            <action name="goto">
+                <params>
+                    <param name="data" value="main_first_and_repeat"/>
+                </params>
+            </action>                           <!-- Goto Firs_detection -->
+
+        </unit>
+
+        <unit name="hangup_logic">
+
+            <!-- conditions_list -->
+            <action name="if">
+                <params>
+                    <param name="data">confirm=="false"?hangup_wrong_time
+                    </param>
+                </params>
+            </action>                             <!-- confirm=="false"?hangup_wrong_time -->
+            <action name="if">
+                <params>
+                    <param name="data">wrong_time="true"?hangup_wrong_time
+                    </param>
+                </params>
+            </action>                             <!-- wrong_time="true"?hangup_wrong_time -->
+            <action name="if">
+                <params>
+                    <param name="data">recommendation_score==[0..8]?hangup_negative</param>
+                </params>
+            </action>                             <!-- recommendation_score==[0..8]?hangup_negative -->
+            <action name="if">
+                <params>
+                    <param name="label" value="is_positive"/>
+                    <param name="data">recommendation_score==9?hangup_positive</param>
+                </params>
+            </action>                             <!-- recommendation_score==9?hangup_positive -->
+
+            <!-- если ни одно из условий не подошло - hangup_null -->
+            <action name="playback">
+                <params>
+                    <param name="label" value="hangup_null"/>
+                    <param name="data" value="hangup_null"/>
+                </params>
+            </action>                       <!-- hangup_null -->
+            <action name="tag">
+                <params>
+                    <param name="data" value="проблемы с распознаванием"/>
+                </params>
+            </action>                           <!-- проблемы с распознаванием -->
+            <action name="hangup">
+            </action>
+
+
+            <action name="playback">
+                <params>
+                    <param name="label" value="hangup_wrong_time"/>
+                    <param name="data" value="hangup_wrong_time"/>
+                </params>
+            </action>                       <!-- hangup_wrong_time -->
+            <action name="tag">
+                <params>
+                    <param name="data" value="нет времени для разговора"/>
+                </params>
+            </action>                           <!-- нет времени для разговора -->
+            <action name="hangup">
+            </action>
+
+            <action name="playback">
+                <params>
+                    <param name="label" value="hangup_positive"/>
+                    <param name="data" value="hangup_positive"/>
+                </params>
+            </action>                       <!-- hangup_positive -->
+            <action name="tag">
+                <params>
+                    <param name="data" value="высокая оценка"/>
+                </params>
+            </action>                           <!-- высокая оценка -->
+            <action name="hangup">
+            </action>
+
+            <action name="playback">
+                <params>
+                    <param name="label" value="hangup_negative"/>
+                    <param name="data" value="hangup_negative"/>
+                </params>
+            </action>                       <!-- hangup_negative -->
+            <action name="tag">
+                <params>
+                    <param name="data" value="низкая оценка"/>
+                </params>
+            </action>                           <!-- низкая оценка -->
+            <action name="hangup">
+            </action>
+
+        </unit>
+
+        <unit name="forward_logic">
+            <action name="playback">
+                <params>
+                    <param name="data" value="forward"/>
+                </params>
+            </action>
+            <action name="tag">
+                <params>
+                    <param name="data" value="перевод на оператора"/>
+                </params>
+            </action>                           <!-- перевод на оператора -->
+            <action name="bridge">
+                <params>
+                    <param name="data">sofia/pstn/3309@95.128.179.99</param>
+                </params>
+            </action>
+
+        </unit>
+
+    </units>
+</agent>
